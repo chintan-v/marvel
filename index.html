@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCU Movie Hub - Marvel Movies in Release Order</title>
+  <meta name="description" content="Complete chronological release date list of Marvel Cinematic Universe movies with one-click streaming access to your favorite watch site.">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/png" href="marvel.png">
+  <link rel="shortcut icon" href="marvel.ico">
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="brand-badge">
+      <span>MARVEL</span>
+      <span class="studios">STUDIOS</span>
+    </div>
+    <h1 class="site-title">MCU Release Order Hub</h1>
+    <p class="site-description">
+      Every Marvel Cinematic Universe movie in official release order. Click any movie title or "Watch on CineHD" button to stream directly on <strong>CineHD</strong>.
+    </p>
+
+    <!-- Stats & Progress Tracker -->
+    <div class="stats-bar">
+      <div class="stat-item">
+        <span class="stat-value" id="total-movies-count">39</span>
+        <span class="stat-label">Total Movies</span>
+      </div>
+
+      <div class="progress-container">
+        <div class="progress-header">
+          <span>Watched Progress</span>
+          <span id="progress-percent">0%</span>
+        </div>
+        <div class="progress-bar-bg">
+          <div class="progress-bar-fill" id="progress-fill"></div>
+        </div>
+      </div>
+
+      <div class="stat-item">
+        <span class="stat-value" id="watched-count">0 / 39</span>
+        <span class="stat-label">Completed</span>
+      </div>
+
+      <button class="settings-btn" id="open-settings-btn" title="Configure your streaming website destination">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        Streaming Site Settings
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="container">
+    
+    <!-- Filter, Search, and Sort Controls -->
+    <section class="controls-bar" aria-label="Filters and search">
+      <div class="controls-top">
+        <div class="search-box">
+          <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input 
+            type="text" 
+            id="search-input" 
+            class="search-input" 
+            placeholder="Search by title, character, director, year..." 
+            autocomplete="off"
+          />
+          <button id="clear-search-btn" class="clear-search-btn" title="Clear search">✕</button>
+        </div>
+
+        <div class="view-controls">
+          <select id="sort-select" class="select-control" aria-label="Sort movies">
+            <option value="release-asc">Release Date: Earliest First</option>
+            <option value="release-desc">Release Date: Latest First</option>
+            <option value="title-asc">Movie Title: A to Z</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Phase Tabs -->
+      <nav class="phase-tabs" aria-label="Filter by MCU Phase">
+        <button class="phase-tab active" data-phase="all">All Phases</button>
+        <button class="phase-tab" data-phase="1">Phase 1</button>
+        <button class="phase-tab" data-phase="2">Phase 2</button>
+        <button class="phase-tab" data-phase="3">Phase 3</button>
+        <button class="phase-tab" data-phase="4">Phase 4</button>
+        <button class="phase-tab" data-phase="5">Phase 5</button>
+        <button class="phase-tab" data-phase="6">Phase 6</button>
+      </nav>
+    </section>
+
+    <!-- Movie Cards Grid -->
+    <section class="movie-grid" id="movie-grid" aria-label="Movie cards list">
+      <!-- Generated dynamically by app.js -->
+    </section>
+
+  </main>
+
+  <!-- SETTINGS MODAL -->
+  <div class="modal-backdrop" id="settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="settings-modal-title">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          Streaming Site Settings
+        </h2>
+        <button class="modal-close-btn" id="close-settings-btn" title="Close">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="template-url-input">Streaming URL Pattern</label>
+        <input 
+          type="text" 
+          id="template-url-input" 
+          class="form-input" 
+          placeholder="https://cinehd.vc/movie/{tmdb_id}"
+        />
+        <div class="form-hint">
+          Use <code>{tmdb_id}</code> for direct movie pages (e.g. CineHD), or <code>{title}</code> / <code>{year}</code> for search queries.
+        </div>
+
+        <div class="preset-buttons">
+          <button class="preset-btn highlight" data-pattern="https://cinehd.vc/movie/{tmdb_id}">🎬 CineHD (Direct)</button>
+          <button class="preset-btn" data-pattern="https://cinehd.vc/search?query={title}">🔍 CineHD (Search)</button>
+          <button class="preset-btn" data-pattern="https://www.disneyplus.com/search?q={title}">Disney+</button>
+          <button class="preset-btn" data-pattern="https://www.netflix.com/search?q={title}">Netflix</button>
+          <button class="preset-btn" data-pattern="https://www.amazon.com/s?k={title}+marvel">Prime Video</button>
+          <button class="preset-btn" data-pattern="https://www.google.com/search?q=watch+{title}+marvel">Google Watch</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Live Preview (Example for "Iron Man")</label>
+        <div id="template-preview" style="word-break: break-all; font-family: monospace; font-size: 0.82rem; color: var(--marvel-gold); background: rgba(0,0,0,0.3); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px dashed var(--border-color);">
+          https://cinehd.vc/movie/1726
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 0.6rem; margin-top: 1.5rem; padding-top: 1.2rem; border-top: 1px solid var(--border-color); flex-wrap: wrap;">
+        <button class="btn-secondary" id="test-template-btn" style="font-size: 0.82rem;">Test Link in New Tab</button>
+        <button class="btn-secondary" id="reset-to-cinehd-btn" style="font-size: 0.82rem; color: #2ed573;">Restore CineHD Defaults</button>
+        <button class="btn-secondary" id="reset-all-custom-links-btn" style="font-size: 0.82rem; color: #ff6b6b;">Clear All Custom Links</button>
+        <button class="btn-secondary" id="reset-watched-btn" style="font-size: 0.82rem; color: #ff6b6b;">Reset Watched Tracker</button>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-primary" id="save-settings-btn">Save Preferences</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT CUSTOM MOVIE LINK MODAL -->
+  <div class="modal-backdrop" id="edit-link-modal" role="dialog" aria-modal="true" aria-labelledby="edit-movie-title">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 class="modal-title" id="edit-movie-title">Set Custom Direct URL</h2>
+        <button class="modal-close-btn" id="close-edit-modal-btn" title="Close">✕</button>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="movie-custom-url-input">Direct Streaming URL for this Movie</label>
+        <input 
+          type="url" 
+          id="movie-custom-url-input" 
+          class="form-input" 
+          placeholder="https://your-streaming-site.com/movie/iron-man-2008"
+        />
+        <div class="form-hint">
+          Paste the direct watch link for this specific movie. If left empty, it will use your global streaming search URL pattern.
+        </div>
+        <div id="edit-default-preview" style="margin-top: 0.6rem; font-size: 0.8rem; color: var(--text-muted); word-break: break-all;"></div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" id="clear-edit-link-btn">Clear Custom Link</button>
+        <button class="btn-primary" id="save-edit-link-btn">Save Link</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast" role="status" aria-live="polite">Preferences saved!</div>
+
+  <!-- Scripts -->
+  <script src="movies.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
