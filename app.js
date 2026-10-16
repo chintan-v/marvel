@@ -25,9 +25,16 @@
   // Auto-heal on startup: clear any legacy or broken template saved in browser storage
   (function sanitizeStorage() {
     try {
-      const saved = localStorage.getItem(STORAGE_KEYS.TEMPLATE);
-      if (saved && (saved.includes('cinehd.vc/home') || saved.includes('disneyplus.com') || saved.includes('/home/search') || !saved.includes('{tmdb_id}'))) {
-        localStorage.setItem(STORAGE_KEYS.TEMPLATE, DEFAULT_TEMPLATE);
+      let saved = localStorage.getItem(STORAGE_KEYS.TEMPLATE);
+      if (saved) {
+        if (saved.includes('cinehd.vc/home') || saved.includes('/home/search')) {
+          localStorage.setItem(STORAGE_KEYS.TEMPLATE, DEFAULT_TEMPLATE);
+        } else if (saved.includes('watch-v2.autoembed.app/movie/')) {
+          const normalized = saved.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
+          if (normalized !== saved) {
+            localStorage.setItem(STORAGE_KEYS.TEMPLATE, normalized);
+          }
+        }
       }
     } catch (e) {
       // Storage unavailable
@@ -37,7 +44,7 @@
   // Retrieve storage state
   function getStreamingTemplate() {
     let saved = localStorage.getItem(STORAGE_KEYS.TEMPLATE);
-    if (saved && (saved.includes('cinehd.vc/home') || saved.includes('/home/search') || saved.includes('disneyplus.com'))) {
+    if (saved && (saved.includes('cinehd.vc/home') || saved.includes('/home/search'))) {
       saved = DEFAULT_TEMPLATE;
       localStorage.setItem(STORAGE_KEYS.TEMPLATE, DEFAULT_TEMPLATE);
     }
@@ -49,6 +56,9 @@
     if (clean.includes('cinehd.vc/home') || clean.includes('/home/search')) {
       clean = DEFAULT_TEMPLATE;
     }
+    // Auto-normalize if user pasted a specific movie URL from AutoEmbed or CineHD
+    clean = clean.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
+    clean = clean.replace(/(cinehd\.vc\/movie\/)\d+/, '$1{tmdb_id}');
     localStorage.setItem(STORAGE_KEYS.TEMPLATE, clean);
   }
 
@@ -215,11 +225,14 @@
       const { url: watchUrl, isCustom } = resolveWatchUrl(movie);
       const displayDate = formatDate(movie.releaseDate);
 
-              const badgeLabel = isCustom ? 'Custom Link' : (watchUrl.includes('cinehd.vc') ? 'CineHD Direct' : 'Auto Search');
-              const badgeClass = isCustom ? 'custom' : (watchUrl.includes('cinehd.vc') ? 'cinehd' : '');
-              return `
+      const isAutoEmbed = watchUrl.includes('autoembed.app');
+      const isCinehd = watchUrl.includes('cinehd.vc');
+      const providerName = isCustom ? 'Custom Link' : (isAutoEmbed ? 'AutoEmbed' : (isCinehd ? 'CineHD' : 'Streaming Site'));
+      const badgeLabel = isCustom ? 'Custom Link' : (isAutoEmbed ? 'AutoEmbed Direct' : (isCinehd ? 'CineHD Direct' : 'Auto Search'));
+      const badgeClass = isCustom ? 'custom' : (isAutoEmbed ? 'autoembed' : (isCinehd ? 'cinehd' : ''));
+      return `
         <article class="movie-card ${isWatched ? 'watched' : ''}" data-id="${movie.id}">
-          <div class="poster-wrap" onclick="window.open('${watchUrl}', '_blank')" title="Watch ${movie.title} on CineHD">
+          <div class="poster-wrap" onclick="window.open('${watchUrl}', '_blank')" title="Watch ${movie.title} on ${providerName}">
             <img 
               class="poster-img" 
               src="${movie.poster}" 
@@ -234,7 +247,7 @@
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M8 5v14l11-7z"/>
                 </svg>
-                Watch on CineHD
+                Watch on ${providerName}
               </span>
             </div>
           </div>
@@ -246,11 +259,11 @@
                 target="_blank" 
                 rel="noopener noreferrer" 
                 class="movie-title" 
-                title="Click to open ${movie.title} on CineHD"
+                title="Click to open ${movie.title} on ${providerName}"
               >
                 ${movie.title}
               </a>
-              <span class="link-status-badge ${badgeClass}" title="${isCustom ? 'Custom direct URL active' : (watchUrl.includes('cinehd.vc') ? 'Direct CineHD link' : 'Global search URL')}">
+              <span class="link-status-badge ${badgeClass}" title="${isCustom ? 'Custom direct URL active' : (isAutoEmbed ? 'Direct AutoEmbed link' : (isCinehd ? 'Direct CineHD link' : 'Global search URL'))}">
                 ${badgeLabel}
               </span>
             </div>
@@ -349,7 +362,9 @@
     const input = document.getElementById('template-url-input');
     const preview = document.getElementById('template-preview');
     if (!input || !preview) return;
-    const val = input.value.trim() || DEFAULT_TEMPLATE;
+    let val = input.value.trim() || DEFAULT_TEMPLATE;
+    val = val.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
+    val = val.replace(/(cinehd\.vc\/movie\/)\d+/, '$1{tmdb_id}');
     const sample = val
       .replace(/{tmdb_id}/g, '1726')
       .replace(/{id}/g, '1726')
@@ -479,7 +494,9 @@
     const testTemplateBtn = document.getElementById('test-template-btn');
     if (testTemplateBtn) {
       testTemplateBtn.addEventListener('click', () => {
-        const val = templateInput ? templateInput.value.trim() : DEFAULT_TEMPLATE;
+        let val = templateInput ? templateInput.value.trim() : DEFAULT_TEMPLATE;
+        val = val.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
+        val = val.replace(/(cinehd\.vc\/movie\/)\d+/, '$1{tmdb_id}');
         const testUrl = val
           .replace(/{tmdb_id}/g, '1726')
           .replace(/{id}/g, '1726')
@@ -522,6 +539,22 @@
           closeEditLinkModal();
           showToast('Reverted to default search link.');
         }
+      });
+    }
+
+    // Switch to AutoEmbed button in Settings
+    const resetToAutoembedBtn = document.getElementById('reset-to-autoembed-btn');
+    if (resetToAutoembedBtn) {
+      resetToAutoembedBtn.addEventListener('click', () => {
+        const autoembedTpl = 'https://watch-v2.autoembed.app/movie/{tmdb_id}';
+        setStreamingTemplate(autoembedTpl);
+        if (templateInput) {
+          templateInput.value = autoembedTpl;
+          updateTemplatePreview();
+        }
+        render();
+        closeSettingsModal();
+        showToast('Switched to AutoEmbed direct streaming!');
       });
     }
 

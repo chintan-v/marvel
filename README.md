@@ -24,16 +24,18 @@ Then visit `http://localhost:3000`.
 
 ---
 
-## 🍿 CineHD Streaming Integration
+## 🍿 Streaming Integrations (CineHD & AutoEmbed)
 
-The application is pre-configured for **CineHD** (`https://cinehd.vc/`):
-- CineHD structures its movie pages using official TMDb movie IDs: `https://cinehd.vc/movie/{tmdb_id}`.
-- All **39 Marvel movies** are mapped to their verified TMDb IDs, meaning **clicking any movie card, title, or "Watch on CineHD" button opens that exact movie's streaming page on CineHD directly**.
+The application supports direct movie streaming via official TMDb movie IDs:
+- **AutoEmbed**: `https://watch-v2.autoembed.app/movie/{tmdb_id}` (e.g. Iron Man 2 → `/movie/10138`)
+- **CineHD**: `https://cinehd.vc/movie/{tmdb_id}`
+- All **39 Marvel movies** are mapped to their verified TMDb IDs, meaning **clicking any movie card, title, or watch button opens that exact movie's streaming page directly**.
 - Examples:
-  - *Iron Man (2008)* → `https://cinehd.vc/movie/1726`
-  - *The Avengers (2012)* → `https://cinehd.vc/movie/24428`
-  - *Avengers: Endgame (2019)* → `https://cinehd.vc/movie/299534`
-  - *Deadpool & Wolverine (2024)* → `https://cinehd.vc/movie/533535`
+  - *Iron Man (2008)* → `/movie/1726`
+  - *Iron Man 2 (2010)* → `/movie/10138`
+  - *The Avengers (2012)* → `/movie/24428`
+  - *Avengers: Endgame (2019)* → `/movie/299534`
+  - *Deadpool & Wolverine (2024)* → `/movie/533535`
 
 ---
 
@@ -41,9 +43,9 @@ The application is pre-configured for **CineHD** (`https://cinehd.vc/`):
 
 - **Release Date Chronological Order**: Complete MCU catalog from *Iron Man (2008)* through Phase 5 and upcoming Phase 6 releases.
 - **One-Click Streaming**:
-  - Clicking a movie title, poster, or "Watch on CineHD" button opens the movie in a new tab.
+  - Clicking a movie title, poster, or watch button opens the movie in a new tab.
 - **Customizable Streaming Settings**:
-  - You can switch between **CineHD Direct** (`https://cinehd.vc/movie/{tmdb_id}`), **CineHD Search** (`https://cinehd.vc/search?query={title}`), or other providers (Disney+, Netflix, Prime Video, Google).
+  - Easily switch between **AutoEmbed Direct** (`https://watch-v2.autoembed.app/movie/{tmdb_id}`), **CineHD Direct** (`https://cinehd.vc/movie/{tmdb_id}`), or search providers (Disney+, Netflix, Prime Video, Google).
   - Individual override: Click the ✏️ **edit icon** on any movie card to paste a custom direct URL for that specific film.
 - **Search & Filter**:
   - Real-time instant search by title, hero, director, or release year.

@@ -600,6 +600,11 @@ body {
   color: #2ed573;
   border: 1px solid rgba(46, 213, 115, 0.3);
 }
+.link-status-badge.autoembed {
+  background: rgba(56, 189, 248, 0.15);
+  color: #38bdf8;
+  border: 1px solid rgba(56, 189, 248, 0.3);
+}
 .preset-btn.highlight {
   background: rgba(230, 36, 41, 0.2);
   border-color: var(--marvel-red);
