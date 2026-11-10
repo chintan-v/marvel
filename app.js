@@ -365,6 +365,17 @@
     if (modal) modal.classList.remove('open');
   }
 
+  function updatePresetButtonsHighlight(currentPattern) {
+    document.querySelectorAll('.preset-buttons .preset-btn').forEach(btn => {
+      const pattern = btn.dataset.pattern;
+      if (pattern && pattern === currentPattern) {
+        btn.classList.add('active');
+      } else {
+        btn.classList.remove('active');
+      }
+    });
+  }
+
   function updateTemplatePreview() {
     const input = document.getElementById('template-url-input');
     const preview = document.getElementById('template-preview');
@@ -379,6 +390,7 @@
       .replace(/{title}/g, encodeURIComponent('Iron Man'))
       .replace(/{year}/g, '2008');
     preview.textContent = sample;
+    updatePresetButtonsHighlight(val);
   }
 
   function openEditLinkModal(movieId) {

@@ -610,11 +610,12 @@ body {
   color: #38bdf8;
   border: 1px solid rgba(56, 189, 248, 0.3);
 }
-.preset-btn.highlight {
-  background: rgba(230, 36, 41, 0.2);
+.preset-btn.active {
+  background: rgba(230, 36, 41, 0.25);
   border-color: var(--marvel-red);
   color: #ffffff;
   font-weight: 700;
+  box-shadow: 0 0 10px rgba(230, 36, 41, 0.35);
 }
 
 /* Modals */
