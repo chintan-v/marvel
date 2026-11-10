@@ -29,6 +29,11 @@
       if (saved) {
         if (saved.includes('cinehd.vc/home') || saved.includes('/home/search')) {
           localStorage.setItem(STORAGE_KEYS.TEMPLATE, DEFAULT_TEMPLATE);
+        } else if (saved.includes('movy.sx/movie/')) {
+          const normalized = saved.replace(/(movy\.sx\/movie\/)\d+/, '$1{tmdb_id}');
+          if (normalized !== saved) {
+            localStorage.setItem(STORAGE_KEYS.TEMPLATE, normalized);
+          }
         } else if (saved.includes('watch-v2.autoembed.app/movie/')) {
           const normalized = saved.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
           if (normalized !== saved) {
@@ -57,6 +62,7 @@
       clean = DEFAULT_TEMPLATE;
     }
     // Auto-normalize if user pasted a specific movie URL from AutoEmbed or CineHD
+    clean = clean.replace(/(movy\.sx\/movie\/)\d+/, '$1{tmdb_id}');
     clean = clean.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
     clean = clean.replace(/(cinehd\.vc\/movie\/)\d+/, '$1{tmdb_id}');
     localStorage.setItem(STORAGE_KEYS.TEMPLATE, clean);
@@ -225,11 +231,12 @@
       const { url: watchUrl, isCustom } = resolveWatchUrl(movie);
       const displayDate = formatDate(movie.releaseDate);
 
+      const isMovy = watchUrl.includes('movy.sx');
       const isAutoEmbed = watchUrl.includes('autoembed.app');
       const isCinehd = watchUrl.includes('cinehd.vc');
-      const providerName = isCustom ? 'Custom Link' : (isAutoEmbed ? 'AutoEmbed' : (isCinehd ? 'CineHD' : 'Streaming Site'));
-      const badgeLabel = isCustom ? 'Custom Link' : (isAutoEmbed ? 'AutoEmbed Direct' : (isCinehd ? 'CineHD Direct' : 'Auto Search'));
-      const badgeClass = isCustom ? 'custom' : (isAutoEmbed ? 'autoembed' : (isCinehd ? 'cinehd' : ''));
+      const providerName = isCustom ? 'Custom Link' : (isMovy ? 'Movy' : (isAutoEmbed ? 'AutoEmbed' : (isCinehd ? 'CineHD' : 'Streaming Site')));
+      const badgeLabel = isCustom ? 'Custom Link' : (isMovy ? 'Movy Direct' : (isAutoEmbed ? 'AutoEmbed Direct' : (isCinehd ? 'CineHD Direct' : 'Auto Search')));
+      const badgeClass = isCustom ? 'custom' : (isMovy ? 'movy' : (isAutoEmbed ? 'autoembed' : (isCinehd ? 'cinehd' : '')));
       return `
         <article class="movie-card ${isWatched ? 'watched' : ''}" data-id="${movie.id}">
           <div class="poster-wrap" onclick="window.open('${watchUrl}', '_blank')" title="Watch ${movie.title} on ${providerName}">
@@ -263,7 +270,7 @@
               >
                 ${movie.title}
               </a>
-              <span class="link-status-badge ${badgeClass}" title="${isCustom ? 'Custom direct URL active' : (isAutoEmbed ? 'Direct AutoEmbed link' : (isCinehd ? 'Direct CineHD link' : 'Global search URL'))}">
+              <span class="link-status-badge ${badgeClass}" title="${isCustom ? 'Custom direct URL active' : (isMovy ? 'Direct Movy link' : (isAutoEmbed ? 'Direct AutoEmbed link' : (isCinehd ? 'Direct CineHD link' : 'Global search URL')))}">
                 ${badgeLabel}
               </span>
             </div>
@@ -363,6 +370,7 @@
     const preview = document.getElementById('template-preview');
     if (!input || !preview) return;
     let val = input.value.trim() || DEFAULT_TEMPLATE;
+    val = val.replace(/(movy\.sx\/movie\/)\d+/, '$1{tmdb_id}');
     val = val.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
     val = val.replace(/(cinehd\.vc\/movie\/)\d+/, '$1{tmdb_id}');
     const sample = val
@@ -495,6 +503,7 @@
     if (testTemplateBtn) {
       testTemplateBtn.addEventListener('click', () => {
         let val = templateInput ? templateInput.value.trim() : DEFAULT_TEMPLATE;
+        val = val.replace(/(movy\.sx\/movie\/)\d+/, '$1{tmdb_id}');
         val = val.replace(/(watch-v2\.autoembed\.app\/movie\/)\d+/, '$1{tmdb_id}');
         val = val.replace(/(cinehd\.vc\/movie\/)\d+/, '$1{tmdb_id}');
         const testUrl = val
@@ -539,6 +548,22 @@
           closeEditLinkModal();
           showToast('Reverted to default search link.');
         }
+      });
+    }
+
+    // Switch to Movy button in Settings
+    const resetToMovyBtn = document.getElementById('reset-to-movy-btn');
+    if (resetToMovyBtn) {
+      resetToMovyBtn.addEventListener('click', () => {
+        const movyTpl = 'https://www.movy.sx/movie/{tmdb_id}?play=true';
+        setStreamingTemplate(movyTpl);
+        if (templateInput) {
+          templateInput.value = movyTpl;
+          updateTemplatePreview();
+        }
+        render();
+        closeSettingsModal();
+        showToast('Switched to Movy direct streaming!');
       });
     }
 

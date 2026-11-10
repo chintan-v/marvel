@@ -27,6 +27,7 @@ Then visit `http://localhost:3000`.
 ## 🍿 Streaming Integrations (CineHD & AutoEmbed)
 
 The application supports direct movie streaming via official TMDb movie IDs:
+- **Movy**: `https://www.movy.sx/movie/{tmdb_id}?play=true`
 - **AutoEmbed**: `https://watch-v2.autoembed.app/movie/{tmdb_id}` (e.g. Iron Man 2 → `/movie/10138`)
 - **CineHD**: `https://cinehd.vc/movie/{tmdb_id}`
 - All **39 Marvel movies** are mapped to their verified TMDb IDs, meaning **clicking any movie card, title, or watch button opens that exact movie's streaming page directly**.
@@ -45,7 +46,7 @@ The application supports direct movie streaming via official TMDb movie IDs:
 - **One-Click Streaming**:
   - Clicking a movie title, poster, or watch button opens the movie in a new tab.
 - **Customizable Streaming Settings**:
-  - Easily switch between **AutoEmbed Direct** (`https://watch-v2.autoembed.app/movie/{tmdb_id}`), **CineHD Direct** (`https://cinehd.vc/movie/{tmdb_id}`), or search providers (Disney+, Netflix, Prime Video, Google).
+  - Easily switch between **Movy Direct** (`https://www.movy.sx/movie/{tmdb_id}?play=true`), **AutoEmbed Direct** (`https://watch-v2.autoembed.app/movie/{tmdb_id}`), **CineHD Direct** (`https://cinehd.vc/movie/{tmdb_id}`), or search providers (Disney+, Netflix, Prime Video, Google).
   - Individual override: Click the ✏️ **edit icon** on any movie card to paste a custom direct URL for that specific film.
 - **Search & Filter**:
   - Real-time instant search by title, hero, director, or release year.
